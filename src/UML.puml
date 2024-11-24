@@ -1,0 +1,116 @@
+@startuml
+class ObserverJugador {
+    + updateTurno()
+    + updateFinTurno(dados: String, puntos: int, reroll: boolean)
+    + updateStatus(mensaje: String)
+    + updatePuntos(mensaje: String)
+    + finalizar();
+}
+
+class Ventana{
+    # frame : Jframe
+    # estado : JTextArea
+    # botonTirar : JButton
+    # panelPrincipal : Container
+    # puntaje : Label
+
+
+    - construirventana(jugador : String)
+    # mostrarMensaje(mensaje: String, reemplazar : boolean)
+    # actualizarPuntaje(puntaje : String)
+    # cerrarVentana()
+    # pulsarBotonTirar()
+}
+
+class VistaJugadorGUI{
+    - id : int
+    - controller : Controller
+    - presiono : boolean
+    - fin : boolean
+
+    - tirarDados()
+}
+
+class VistaJugadorConsola{
+    - id : int
+    - controller : Controller
+    - scanner : Scanner
+
+    - tirarDados()
+}
+
+class Controller {
+    - model : Model
+
+    + notificarAbandono(id: int)
+    + eleccionReroll(id: int) : int
+    + tirarDados(id: int)
+    + validarEmptyInputConsola()
+    + confirmarDados()
+}
+
+class Model {
+    {static} - serialVersionUID : Long
+    {static} - model : Model
+    - observers : ObserverJugador[]
+    - puntos : Integer[]
+    - rondasGanadas Integer[]
+    - rondas : int
+    - rondaActual : int
+    - turnoActual : int
+    - rerolls : int
+    - maxRerolls : int
+    - confirmado : boolean
+    - jugando : boolean
+
+    + empezarJuego()
+    + setObservers(observersJugador : ObserverJugador[])
+    + setJugadores(observersJugador : ObserverJugador[])
+    + notificarObservers(mensaje: String)
+    + notificarTirarDados(observerJugador : ObserverJugador)
+    + notificarFinTurnoJugador(observerJugador : ObserverJugador, numJugador : int, reroll : boolean)
+    + tirarDados(jugador : int)
+    + toString() : string
+    + getJugadores() : jugador[]
+    + getJugando() : boolean
+    - desempate(jugadores : int[])
+    - determinarGanadorDesempate(jugadores : int[])
+    - ganador() : string
+    - arrayIntaString(array : int[], detallado : boolean)
+    - contarPuntos(jugador : Jugador) : int
+    - verificarPokerReal(dados : Dado[]) : int
+    - verificarPokerCuadruple(dados : Dado[]) : int
+    - verificarEscaleraMenor(dados: Dado[]) : int
+    - verificarEscaleraMayor(dados : Dado[]) : int
+    - verificarTriple(dados : Dado[]) : int
+    - verificarPar(dados : Dado[]) : int
+    - verificarDoblePar(dados : Dado[], ignorar : int) : int
+    - verificarFull(dados : Dado[])
+}
+
+class Jugador{
+    - dados : Dado[]
+
+    + tirarDados()
+    + getDados() : Dado[]
+    + getDadosString() : String
+}
+
+class Dado{
+    - valor : int
+
+    + tirarDados()
+    + getValor() : int
+}
+
+VistaJugadorGUI <|-- Ventana
+VistaJugadorGUI <|-- ObserverJugador
+VistaJugadorConsola <|-- Ventana
+VistaJugadorConsola <|-- ObserverJugador
+VistaJugadorGUI <--> Controller : N:1
+VistaJugadorConsola <--> Controller : N:1
+Jugador --> Dado : 1:N
+Model --> Jugador : 1:N
+Model <--> Controller : 1:1
+Model --> ObserverJugador : 1:N
+@enduml
