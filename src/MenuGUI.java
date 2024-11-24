@@ -161,7 +161,7 @@ public class MenuGUI{
             try {
                 int jugadores = Integer.parseInt(inputJugadores.getText());
                 int rondas = Integer.parseInt(inputRondas.getText());
-                int rerolls = Integer.parseInt(inputRondas.getText());
+                int rerolls = Integer.parseInt(inputRerolls.getText());
 
                 if (jugadores > LIMITE_JUGADORES || jugadores < 2) {
                     throw new NumberFormatException("El número de jugadores no puede ser mayor a " + LIMITE_JUGADORES);

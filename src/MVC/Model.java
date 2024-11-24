@@ -437,6 +437,7 @@ public class Model implements Serializable {
         }
         this.puntos = puntosTemp;
         this.rondasGanadas = rondasGanadasTemp;
+        this.rondasGanadas[idGanador]++;
         notificarObservers("El jugador que gano el desempate es el " + idGanador + "\n");
     }
 
