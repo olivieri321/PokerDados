@@ -1,5 +1,5 @@
 # PokerDados
-Proyecto de POO
+TP Integrador de POO
 
 Estudiante:
   + Nombre y Apellido: Facundo Agustin Olivieri
