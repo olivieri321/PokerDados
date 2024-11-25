@@ -32,12 +32,12 @@ public class VistaJugadorGUI extends Ventana implements ObserverJugador {
     public void updateTurno() {
         this.botonTirar.setEnabled(true);
 
-        synchronized (this) { // el hilo que ejecuta update turno tiene control exclusivo de este objeto mientras espera
+        synchronized (this) { // se bloquea el hilo para el objeto
             try {
                 while (!presiono) {
                     wait(); // Esperar hasta que jugador presione el botón
                 }
-            } catch (InterruptedException e) { // se requiere que el wait este dentro del codigo try catch
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -50,9 +50,8 @@ public class VistaJugadorGUI extends Ventana implements ObserverJugador {
         this.tirarDados();
         presiono = true;
 
-        // Notificar al modelo que el jugador ha presionado el botón
         synchronized (this) {
-            notify();
+            notify(); // libera el lock del wait llamado en update turno
         }
     }
 
