@@ -67,54 +67,43 @@ public class Model implements Serializable {
         }
     }
 
-    private int verificarPokerReal(Dado[] dados){       // cinco dados iguales
-        if (dados[0].getValor() == dados[1].getValor() && dados[0].getValor() == dados[2].getValor()
-                && dados[3].getValor() == dados[0].getValor() && dados[4].getValor() == dados[0].getValor()){
-            if (dados[0].getValor() == 1){
-                return 10;
+    private int verificarPokerReal(Dado[] dados){       // 5 dados iguales
+        int temp = 0;
+        for (int i = 0; i < dados.length; i++) {
+            if (i == 0){
+                temp = dados[i].getValor();
             }
-            return dados[0].getValor();
+            if (i >= 1){
+                if (dados[i].getValor() == temp){
+                    temp = dados[i].getValor();
+                }else {
+                    return -1;
+                }
+            }
         }
-        return -1;
+        return 20;
     }
 
-    private int verificarPokerCuadruple(Dado[] dados){ // cuatro dados iguales
-        if (dados[0].getValor() == dados[1].getValor() && dados[0].getValor() == dados[2].getValor()
-                && dados[3].getValor() == dados[0].getValor()){
-            if (dados[0].getValor() == 1){
-                return 10;
+    private int verificarPokerCuadruple(Dado[] dados){ // 4 dados iguales
+        int desiguales = 0;
+        int temp = 0;
+        for (int i = 0; i < dados.length; i++) {
+            if (i == 0){
+                temp = dados[i].getValor();
             }
-            return dados[0].getValor();
-        }
-        if (dados[0].getValor() == dados[1].getValor() && dados[0].getValor() == dados[2].getValor()
-                && dados[4].getValor() == dados[0].getValor()){
-            if (dados[0].getValor() == 1){
-                return 10;
+            if (i >= 1){
+                if (dados[i].getValor() == temp){
+                    temp = dados[i].getValor();
+                }else {
+                    desiguales++;
+                }
             }
-            return dados[0].getValor();
         }
-        if (dados[0].getValor() == dados[1].getValor() && dados[0].getValor() == dados[3].getValor()
-                && dados[4].getValor() == dados[0].getValor()){
-            if (dados[0].getValor() == 1){
-                return 10;
-            }
-            return dados[0].getValor();
+        if (desiguales>=2){
+            return -1;
+        }else {
+            return 10;
         }
-        if (dados[0].getValor() == dados[2].getValor() && dados[0].getValor() == dados[3].getValor()
-                && dados[4].getValor() == dados[0].getValor()){
-            if (dados[0].getValor() == 1){
-                return 10;
-            }
-            return dados[0].getValor();
-        }
-        if (dados[1].getValor() == dados[2].getValor() && dados[1].getValor() == dados[3].getValor()
-                && dados[4].getValor() == dados[1].getValor()){
-            if (dados[1].getValor() == 1){
-                return 10;
-            }
-            return dados[1].getValor();
-        }
-        return -1;
     }
 
     private int verificarEscaleraMenor(Dado[] dados){  // verificar si dados[] tiene 1,2,3,4,5
@@ -170,9 +159,9 @@ public class Model implements Serializable {
     }
 
     private int verificarTriple(Dado[] dados){ // frecuencia de dado N = 3
-        int[] frecuencias = new int[13];
+        int[] frecuencias = new int[5];
         for (int i = 0; i < dados.length; i++){
-            int valor = dados[i].getValor();
+            int valor = dados[i].getValor() - 1;
             frecuencias[valor]++;
         }
         for (int i = 0; i < frecuencias.length; i++) {
@@ -180,16 +169,16 @@ public class Model implements Serializable {
                 if ( i == 1){
                     return 10;
                 }
-                return i;
+                return i + 1;
             }
         }
         return -1;
     }
 
     private int verificarPar(Dado[] dados, int ignorar){  // frecuencia de dado N = 2
-        int[] frecuencias = new int[13];
+        int[] frecuencias = new int[5];
         for (int i = 0; i < dados.length; i++){
-            int valor = dados[i].getValor();
+            int valor = dados[i].getValor() - 1;
             frecuencias[valor]++;
         }
         for (int i = 0; i < frecuencias.length; i++) {
@@ -197,7 +186,7 @@ public class Model implements Serializable {
                 if (i == 1){
                     return 10;
                 }
-                return i;
+                return i + 1;
             }
         }
         return -1;
@@ -212,10 +201,10 @@ public class Model implements Serializable {
     }
 
     private int verificarFull(Dado[] dados) { // tres iguales y un par igual
-        int[] frecuencias = new int[13];
+        int[] frecuencias = new int[5];
         int trio = -1;
         for (int i = 0; i < dados.length; i++){
-            int valor = dados[i].getValor();
+            int valor = dados[i].getValor() - 1;
             frecuencias[valor]++;
         }
 
@@ -276,6 +265,13 @@ public class Model implements Serializable {
 
     public void tirarDados(int jugador){
         jugadores[jugador].tirarDados();
+        puntos[jugador] = contarPuntos(jugadores[jugador]);
+        rerolls++;
+        notificarFinTurnoJugador(observers[jugador], jugador, rerolls < maxRerolls);
+    }
+
+    public void tirarDados(int jugador, boolean[] dadosElejidos){
+        jugadores[jugador].tirarDados(dadosElejidos);
         puntos[jugador] = contarPuntos(jugadores[jugador]);
         rerolls++;
         notificarFinTurnoJugador(observers[jugador], jugador, rerolls < maxRerolls);

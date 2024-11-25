@@ -21,6 +21,15 @@ public class Jugador implements Serializable {
         return 0;
     }
 
+    public int tirarDados(boolean[] dadosElejidos) {  // simulara tirar todos los dados que tiene
+        for (int i = 0; i < dados.length; i++) {
+            if (dadosElejidos[i]){
+                dados[i].tirarDado();
+            }
+        }
+        return 0;
+    }
+
     public Dado[] getDados() {
         return dados;
     }

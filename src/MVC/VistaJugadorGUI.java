@@ -5,8 +5,10 @@ import clases.ObserverJugador;
 
 import javax.swing.*;
 
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 public class VistaJugadorGUI extends Ventana implements ObserverJugador {
 
@@ -57,34 +59,74 @@ public class VistaJugadorGUI extends Ventana implements ObserverJugador {
 
     public void updateFinTurno(String dados, int puntos, boolean reroll) {
 
-        JOptionPane opcion = new JOptionPane("Obtuviste los dados "+ dados+ " queres volver a tirar?", JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
-
         // Crear un JDialog no modal (no bloquea las ventanas) que contiene el JOptionPane
-        JDialog dialogo = opcion.createDialog(this.frame, "Confirmación");
+        JDialog dialogo = new JDialog(this.frame, "");
         dialogo.setModal(false); // No bloquea otras ventanas
+        dialogo.setUndecorated(true);
+
+        JOptionPane opcion = new JOptionPane("Obtuviste los dados "+ dados+ ", en caso\n de querer" +
+                " volver a tirar seleccione los Dados a tirar.",
+                JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
+        //dados a cambiar
+        JCheckBox checkBox1 = new JCheckBox("D1");
+        JCheckBox checkBox2 = new JCheckBox("D2");
+        JCheckBox checkBox3 = new JCheckBox("D3");
+        JCheckBox checkBox4 = new JCheckBox("D4");
+        JCheckBox checkBox5 = new JCheckBox("D5");
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+        panel.add(checkBox1);
+        panel.add(checkBox2);
+        panel.add(checkBox3);
+        panel.add(checkBox4);
+        panel.add(checkBox5);
+
+        opcion.add(panel, BorderLayout.NORTH);
+
+        // centrar ventana emergente
+        int frameX = this.frame.getX();
+        int frameY = this.frame.getY();
+        int frameWidth = this.frame.getWidth();
+        int frameHeight = this.frame.getHeight();
+        int dialogX = frameX + ((frameWidth - dialogo.getWidth()) / 2) -50;
+        int dialogY = frameY + ((frameHeight - dialogo.getHeight()) / 2) - 50;
+
+        dialogo.setLocation(dialogX, dialogY);
+
+        dialogo.setContentPane(opcion);
+
+        dialogo.pack();
         dialogo.setVisible(true);
 
         opcion.addPropertyChangeListener(evento -> {
-            if (reroll){
-                if (evento.getPropertyName().equals(JOptionPane.VALUE_PROPERTY)) {
-                    dialogo.dispose();
+            if (evento.getPropertyName().equals(JOptionPane.VALUE_PROPERTY)) {
+                // Obtener la respuesta del usuario
+                int respuesta = (int) opcion.getValue();
+                dialogo.dispose();
 
-                    // Obtener la respuesta del usuario
-                    int respuesta = (int) opcion.getValue();
+                if (reroll) {
                     if (respuesta == JOptionPane.YES_OPTION) {
-                        controller.tirarDados(this.id);
+                        boolean[] dadosElejidos = new boolean[5];
+                        dadosElejidos[0] = checkBox1.isSelected();
+                        dadosElejidos[1] = checkBox2.isSelected();
+                        dadosElejidos[2] = checkBox3.isSelected();
+                        dadosElejidos[3] = checkBox4.isSelected();
+                        dadosElejidos[4] = checkBox5.isSelected();
+
+                        controller.tirarDados(this.id, dadosElejidos);
                     } else if (respuesta == JOptionPane.NO_OPTION) {
                         controller.confirmarDados();
-                        this.mostrarMensaje("               Los numeros obtenidos son " + dados + "\n" +
-                                "               lo que corresponde a un total de " + puntos + " puntos.\n", true);
+                        this.mostrarMensaje("Los números obtenidos son " + dados + "\n" +
+                                "Lo que corresponde a un total de " + puntos + " puntos.\n", true);
                     }
+                } else {
+                    controller.confirmarDados();
+                    this.mostrarMensaje("Los números obtenidos son " + dados + "\n" +
+                            "Lo que corresponde a un total de " + puntos + " puntos.\n", true);
                 }
-            } else {
-                controller.confirmarDados();
-                this.mostrarMensaje("               Los numeros obtenidos son " + dados + "\n" +
-                        "               lo que corresponde a un total de " + puntos + " puntos.\n", true);
             }
-
         });
     }
 
@@ -105,7 +147,7 @@ public class VistaJugadorGUI extends Ventana implements ObserverJugador {
     }
 
     public void updateStatus(String mensaje) {
-        this.mostrarMensaje("               " + mensaje , true);
+        this.mostrarMensaje("               " + mensaje , false);
     }
 
     public void finalizar(){
