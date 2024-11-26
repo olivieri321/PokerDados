@@ -60,32 +60,29 @@ public class VistaJugadorConsola implements ObserverJugador { // el observer es 
                 while (entradaIncorrecta){
                     System.out.println("Ingresa Nro de dado que cambiar (del 1 al 6) para confirmar ingresa 0:  \n");
                     try {
-                        entradaIncorrecta = false;
                         temp = scaner.nextInt();
                     } catch (InputMismatchException e) {
                         System.out.println("Entrada no valida\n");
                         entradaIncorrecta = true;
                         temp = -1;
                     }
-                    if (temp <= 6 && temp>=1){
-                        if (temp == 1){
-                            dadosATirar[0] = !dadosATirar[0];
-                        } else if (temp == 2) {
-                            dadosATirar[1] = !dadosATirar[1];
-                        }else if (temp == 3) {
-                            dadosATirar[2] = !dadosATirar[2];
-                        }else if (temp == 4) {
-                            dadosATirar[3] = !dadosATirar[3];
-                        }else if (temp == 5) {
-                            dadosATirar[4] = !dadosATirar[4];
+                    if (temp >= 1 && temp <= 5) {
+                        int indice = temp - 1;
+                        dadosATirar[indice] = !dadosATirar[indice];
+                        if (dadosATirar[indice]){
+                            System.out.println("Dado " + temp + " seleccionado");
+                        }else {
+                            System.out.println("Dado " + temp + " deseleccionado");
                         }
+                    }else if (temp == 0) {
+                        entradaIncorrecta = false;
                     }else {
                         System.out.println("Entrada no valida\n");
                         entradaIncorrecta = true;
                     }
                     scaner.nextLine();
                 }
-                tirarDados();
+                controller.tirarDados(this.id,dadosATirar);
             }
             else{
                 controller.confirmarDados();
