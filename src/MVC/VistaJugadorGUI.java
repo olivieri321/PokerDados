@@ -90,44 +90,51 @@ public class VistaJugadorGUI extends Ventana implements ObserverJugador {
         int frameY = this.frame.getY();
         int frameWidth = this.frame.getWidth();
         int frameHeight = this.frame.getHeight();
-        int dialogX = frameX + ((frameWidth - dialogo.getWidth()) / 2) -50;
-        int dialogY = frameY + ((frameHeight - dialogo.getHeight()) / 2) - 50;
+        int dialogX = frameX + ((frameWidth - dialogo.getWidth()) / 2) - 180;
+        int dialogY = frameY + ((frameHeight - dialogo.getHeight()) / 2) - 60 ;
 
         dialogo.setLocation(dialogX, dialogY);
 
         dialogo.setContentPane(opcion);
 
         dialogo.pack();
-        dialogo.setVisible(true);
+        if (reroll){
+            dialogo.setVisible(true);
 
-        opcion.addPropertyChangeListener(evento -> {
-            if (evento.getPropertyName().equals(JOptionPane.VALUE_PROPERTY)) {
-                // Obtener la respuesta del usuario
-                int respuesta = (int) opcion.getValue();
-                dialogo.dispose();
+            opcion.addPropertyChangeListener(evento -> {
+                if (evento.getPropertyName().equals(JOptionPane.VALUE_PROPERTY)) {
+                    // Obtener la respuesta del usuario
+                    int respuesta = (int) opcion.getValue();
+                    dialogo.dispose();
 
-                if (reroll) {
-                    if (respuesta == JOptionPane.YES_OPTION) {
-                        boolean[] dadosElejidos = new boolean[5];
-                        dadosElejidos[0] = checkBox1.isSelected();
-                        dadosElejidos[1] = checkBox2.isSelected();
-                        dadosElejidos[2] = checkBox3.isSelected();
-                        dadosElejidos[3] = checkBox4.isSelected();
-                        dadosElejidos[4] = checkBox5.isSelected();
+                    if (reroll) {
+                        if (respuesta == JOptionPane.YES_OPTION) {
+                            boolean[] dadosElejidos = new boolean[5];
+                            dadosElejidos[0] = checkBox1.isSelected();
+                            dadosElejidos[1] = checkBox2.isSelected();
+                            dadosElejidos[2] = checkBox3.isSelected();
+                            dadosElejidos[3] = checkBox4.isSelected();
+                            dadosElejidos[4] = checkBox5.isSelected();
 
-                        controller.tirarDados(this.id, dadosElejidos);
-                    } else if (respuesta == JOptionPane.NO_OPTION) {
+                            controller.tirarDados(this.id, dadosElejidos);
+                        } else if (respuesta == JOptionPane.NO_OPTION) {
+                            controller.confirmarDados();
+                            this.mostrarMensaje("Los números obtenidos son " + dados + "\n" +
+                                    "Lo que corresponde a un total de " + puntos + " puntos.\n", true);
+                        }
+                    } else {
                         controller.confirmarDados();
                         this.mostrarMensaje("Los números obtenidos son " + dados + "\n" +
                                 "Lo que corresponde a un total de " + puntos + " puntos.\n", true);
                     }
-                } else {
-                    controller.confirmarDados();
-                    this.mostrarMensaje("Los números obtenidos son " + dados + "\n" +
-                            "Lo que corresponde a un total de " + puntos + " puntos.\n", true);
                 }
-            }
-        });
+            });
+        }else {
+            controller.confirmarDados();
+            this.mostrarMensaje("Los números obtenidos son " + dados + "\n" +
+                    "Lo que corresponde a un total de " + puntos + " puntos.\n", true);
+        }
+
     }
 
     private void tirarDados() {

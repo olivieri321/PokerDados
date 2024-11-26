@@ -15,7 +15,7 @@ public class MenuGUI{
 
     private static final int LIMITE_JUGADORES = 10;
     private static final int LIMITE_RONDAS = 10;
-    private static final int LIMITE_REROLLS = 2;
+    private static final int LIMITE_REROLLS = 1;
 
     public static void cargarSala(Model model, int gui){
 
@@ -128,7 +128,7 @@ public class MenuGUI{
         panelInputs.add(inputRondas);
         panelInputs.add(new JLabel("Numero de jugadores:"));
         panelInputs.add(inputJugadores);
-        panelInputs.add(new JLabel("Numero de rerolls:"));
+        panelInputs.add(new JLabel("Numero de tiros:"));
         panelInputs.add(inputRerolls);
 
         // Panel para el botón
@@ -169,8 +169,8 @@ public class MenuGUI{
                 if (rondas > LIMITE_RONDAS || rondas < 1) {
                     throw new NumberFormatException("El número de rondas no puede ser mayor a " + LIMITE_RONDAS);
                 }
-                if (rerolls > LIMITE_REROLLS || rerolls < 0) {
-                    throw new NumberFormatException("El número de rerolls no puede ser mayor a " + LIMITE_REROLLS);
+                if (rerolls > LIMITE_REROLLS || rerolls <= 0) {
+                    throw new NumberFormatException("El número de tiros no puede ser mayor a " + LIMITE_REROLLS);
                 }
 
 

@@ -26,8 +26,8 @@ public class Model implements Serializable {
     private int rerolls;
     private int maxRerolls;
 
-    private boolean confirmado;
-    private boolean jugando;
+    private boolean confirmado;                   // true == jugador confirmo dados
+    private boolean jugando;                      // true == se esta jugando una partida
 
     public Model( int numJugadores, int rondas, int rerolls) {
         observers = new ObserverJugador[numJugadores];
@@ -270,7 +270,7 @@ public class Model implements Serializable {
         notificarFinTurnoJugador(observers[jugador], jugador, rerolls < maxRerolls);
     }
 
-    public void tirarDados(int jugador, boolean[] dadosElejidos){
+    public void tirarDados(int jugador, boolean[] dadosElejidos){  // tirar solo los dados elejidos
         jugadores[jugador].tirarDados(dadosElejidos);
         puntos[jugador] = contarPuntos(jugadores[jugador]);
         rerolls++;
@@ -373,7 +373,6 @@ public class Model implements Serializable {
         }
         rondaActual = 0;
         String mensajeGanador = ganador();
-        /*System.out.println("La partida ha terminado, "+  mensajeGanador);*/
         for (int i = 0; i < observers.length; i++) {
             observers[i].updateStatus(mensajeGanador);
             observers[i].finalizar();

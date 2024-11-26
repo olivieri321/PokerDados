@@ -43,9 +43,8 @@ class Controller {
     - model : Model
 
     + notificarAbandono(id: int)
-    + eleccionReroll(id: int) : int
     + tirarDados(id: int)
-    + validarEmptyInputConsola()
+    + tirarDados(id: int, boolean[] dadosElejidos)
     + confirmarDados()
 }
 
@@ -92,6 +91,7 @@ class Jugador{
     - dados : Dado[]
 
     + tirarDados()
+    + tirarDados(dadosElejidos : boolean[])
     + getDados() : Dado[]
     + getDadosString() : String
 }
@@ -99,7 +99,7 @@ class Jugador{
 class Dado{
     - valor : int
 
-    + tirarDados()
+    + tirarDado()
     + getValor() : int
 }
 

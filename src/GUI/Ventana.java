@@ -38,12 +38,16 @@ public abstract class Ventana {
 
         // Configuración de puntaje
         JPanel panelPuntaje = new JPanel();
+        panelPuntaje.setBackground(new Color(100,20,20));
+        panelPuntaje.setForeground(new Color(222,222,222));
         panelPuntaje.setLayout(new FlowLayout(FlowLayout.LEFT));
         panelPuntaje.add(puntaje);
 
         // Configuración de estado
         estado.setOpaque(true);
-        estado.setBackground(new Color(40, 200, 80));
+        estado.setEditable(false);
+        estado.setForeground(new Color(222,222,222));
+        estado.setBackground(new Color(23, 102, 44));
         estado.setPreferredSize(new Dimension(300, 200));
 
         // Agregar elementos al contenedor principal
